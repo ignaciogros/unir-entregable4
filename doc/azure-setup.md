@@ -97,30 +97,6 @@ En el repositorio de GitHub:
 |---|---|
 | `AZURE_CREDENTIALS` | JSON completo del paso anterior |
 
-## (Opcional) Permitir que el pipeline actualice el Website del repositorio
-
-El job `deploy` actualiza automáticamente el campo **Website** del repositorio con la URL pública del contenedor tras cada despliegue. El `GITHUB_TOKEN` estándar de Actions no tiene permiso para modificar la configuración del repositorio, por lo que se necesita un **Personal Access Token (PAT)**.
-
-### Crear el PAT
-
-En GitHub: **Settings (perfil) → Developer settings → Personal access tokens → Tokens (classic) → Generate new token**
-
-Marcar el scope:
-
-| Scope | Motivo |
-|---|---|
-| `repo` | Permite actualizar la configuración del repositorio |
-
-Copiar el token generado.
-
-### Añadir el secret en el repositorio
-
-**Settings → Secrets and variables → Actions → New repository secret**
-
-| Nombre | Valor |
-|---|---|
-| `GH_PAT` | token del paso anterior |
-
 ## Verificar el ACR
 
 ```powershell

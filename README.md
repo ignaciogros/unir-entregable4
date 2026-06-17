@@ -128,9 +128,9 @@ The `.github/workflows/ci-cd.yml` file triggers on every push to `main` and runs
 
 ### Job 3 — deploy
 
-- Deletes the previous ACI container (if any) to avoid conflicts.
+- Deletes the previous ACI container (if any) and waits until it is fully removed.
 - Creates a new Azure Container Instance with the freshly published image.
-- Assigns a dynamic DNS label in the format `flask<run_number>`.
+- Uses the fixed DNS label `flask-entregable4` so the public URL never changes between deployments.
 - Prints the public URL at the end of the job.
 
 ### Required secret
@@ -146,8 +146,8 @@ To create the service principal:
 ```bash
 az ad sp create-for-rbac --name "github-actions-sp" \
   --role contributor \
-  --scopes /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-entregable4 \
-  --sdk-auth
+  --scopes /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/rg-entregable4-github \
+  --json-auth
 ```
 
 Copy the JSON output and save it as the `AZURE_CREDENTIALS` secret.
@@ -164,8 +164,9 @@ Non-sensitive values are defined as `env:` at the top of the workflow file:
 | `RESOURCE_GROUP` | `rg-entregable4-github` |
 | `LOCATION` | `westeurope` |
 | `CONTAINER_PORT` | `5000` |
+| `DNS_LABEL` | `flask-entregable4` |
 
-The image tag and DNS label use `${{ github.run_number }}`.
+The image tag uses `${{ github.run_number }}`; the DNS label is fixed.
 
 ## Deployed application
 
