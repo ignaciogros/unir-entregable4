@@ -11,6 +11,7 @@ env:
   RESOURCE_GROUP: rg-entregable4-github
   LOCATION: westeurope
   CONTAINER_PORT: "5000"
+  DNS_LABEL: flask-entregable4
 
 jobs:
 
@@ -59,7 +60,6 @@ jobs:
         run: |
           set -e
           IMAGE="${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.run_number }}"
-          DNS_LABEL="flask${{ github.run_number }}"
 
           echo "Deleting previous container (if exists)..."
           az container delete -g "${{ env.RESOURCE_GROUP }}" -n "${{ env.ACI_NAME }}" --yes 2>/dev/null || true
@@ -76,7 +76,7 @@ jobs:
             --registry-login-server "${{ env.ACR_NAME }}.azurecr.io" \
             --registry-username "$(az acr credential show -n "${{ env.ACR_NAME }}" --query username -o tsv)" \
             --registry-password "$(az acr credential show -n "${{ env.ACR_NAME }}" --query passwords[0].value -o tsv)" \
-            --dns-name-label "$DNS_LABEL" \
+            --dns-name-label "${{ env.DNS_LABEL }}" \
             --ports "${{ env.CONTAINER_PORT }}" \
             --location "${{ env.LOCATION }}"
 

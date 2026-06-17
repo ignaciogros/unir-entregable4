@@ -172,10 +172,10 @@ La etiqueta de imagen y el DNS label usan `${{ github.run_number }}`.
 Tras cada ejecución exitosa del pipeline, Azure asigna automáticamente una URL pública al contenedor con el formato:
 
 ```
-http://flask<RUN_NUMBER>.westeurope.azurecontainer.io:5000
+http://flask-entregable4.westeurope.azurecontainer.io:5000
 ```
 
-donde `<RUN_NUMBER>` es el identificador numérico de la ejecución de GitHub Actions. La URL exacta se imprime al final del job **deploy** en la consola de Actions.
+La URL es estable entre despliegues — solo cambia el tag de la imagen. La URL exacta también se imprime al final del job **deploy** en la consola de Actions.
 
 ## Arquitectura
 
@@ -189,7 +189,7 @@ GitHub Actions (.github/workflows/ci-cd.yml)
   └── deploy        → ACI (aci-entregable4) en westeurope
                            │
                            ▼
-               http://flask<RUN_NUMBER>.westeurope.azurecontainer.io:5000
+               http://flask-entregable4.westeurope.azurecontainer.io:5000
 ```
 
 ### Ficheros principales

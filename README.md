@@ -172,10 +172,10 @@ The image tag and DNS label use `${{ github.run_number }}`.
 After each successful pipeline run, Azure automatically assigns a public URL to the container in the format:
 
 ```
-http://flask<RUN_NUMBER>.westeurope.azurecontainer.io:5000
+http://flask-entregable4.westeurope.azurecontainer.io:5000
 ```
 
-where `<RUN_NUMBER>` is the numeric GitHub Actions run number. The exact URL is printed at the end of the **deploy** job in the Actions console.
+The URL is stable across deployments — only the container image tag changes. The exact URL is also printed at the end of the **deploy** job in the Actions console.
 
 ## Architecture
 
@@ -189,7 +189,7 @@ GitHub Actions (.github/workflows/ci-cd.yml)
   └── deploy        → ACI (aci-entregable4) in westeurope
                            │
                            ▼
-               http://flask<RUN_NUMBER>.westeurope.azurecontainer.io:5000
+               http://flask-entregable4.westeurope.azurecontainer.io:5000
 ```
 
 ### Key files
