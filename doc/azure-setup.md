@@ -103,13 +103,13 @@ El job `deploy` actualiza automáticamente el campo **Website** del repositorio 
 
 ### Crear el PAT
 
-En GitHub: **Settings (perfil) → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**
+En GitHub: **Settings (perfil) → Developer settings → Personal access tokens → Tokens (classic) → Generate new token**
 
-| Campo | Valor |
+Marcar el scope:
+
+| Scope | Motivo |
 |---|---|
-| Resource owner | tu usuario |
-| Repository access | Only selected repositories → `unir-entregable4` |
-| Permissions → Repository → Administration | **Read and write** |
+| `repo` | Permite actualizar la configuración del repositorio |
 
 Copiar el token generado.
 
