@@ -1,0 +1,39 @@
+# Version control
+.git/
+.gitignore
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Tests (not needed in production image)
+tests/
+pytest.ini
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# CI/CD config
+.github/
+
+# Documentation
+*.md
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
