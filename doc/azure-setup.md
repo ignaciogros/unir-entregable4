@@ -99,13 +99,27 @@ En el repositorio de GitHub:
 
 ## (Opcional) Permitir que el pipeline actualice el Website del repositorio
 
-El job `deploy` actualiza automáticamente el campo **Website** del repositorio de GitHub con la URL pública del contenedor tras cada despliegue. Para que funcione, el `GITHUB_TOKEN` necesita permiso de escritura sobre el contenido del repositorio.
+El job `deploy` actualiza automáticamente el campo **Website** del repositorio con la URL pública del contenedor tras cada despliegue. El `GITHUB_TOKEN` estándar de Actions no tiene permiso para modificar la configuración del repositorio, por lo que se necesita un **Personal Access Token (PAT)**.
 
-El workflow ya incluye `permissions: contents: write` en el job `deploy`. Solo hay que verificar que el repositorio no tenga desactivados los permisos de escritura para workflows:
+### Crear el PAT
 
-**Settings → Actions → General → Workflow permissions → Read and write permissions**
+En GitHub: **Settings (perfil) → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**
 
-Si está en modo solo lectura, cambiar a *Read and write permissions* y guardar.
+| Campo | Valor |
+|---|---|
+| Resource owner | tu usuario |
+| Repository access | Only selected repositories → `unir-entregable4` |
+| Permissions → Repository → Administration | **Read and write** |
+
+Copiar el token generado.
+
+### Añadir el secret en el repositorio
+
+**Settings → Secrets and variables → Actions → New repository secret**
+
+| Nombre | Valor |
+|---|---|
+| `GH_PAT` | token del paso anterior |
 
 ## Verificar el ACR
 
