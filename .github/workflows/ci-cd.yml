@@ -91,4 +91,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           FQDN=$(az container show -g "${{ env.RESOURCE_GROUP }}" -n "${{ env.ACI_NAME }}" --query ipAddress.fqdn -o tsv)
-          gh repo edit --homepage "http://$FQDN:${{ env.CONTAINER_PORT }}"
+          gh repo edit "${{ github.repository }}" --homepage "http://$FQDN:${{ env.CONTAINER_PORT }}"
