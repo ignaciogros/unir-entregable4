@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="author" content="Ignacio Gros">
+  <title>Entregable 4 — Flask CI/CD</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* ── CRT wrapper — power-on flicker ── */
+    .crt {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: poweron 2s ease-out both;
+    }
+
+    /* Scanlines */
+    .crt::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 3px,
+        rgba(0, 0, 0, 0.18) 3px,
+        rgba(0, 0, 0, 0.18) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Vignette — curved-screen illusion */
+    .crt::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 50%,
+        rgba(0, 0, 0, 0.88) 100%
+      );
+      pointer-events: none;
+      z-index: 11;
+    }
+
+    main {
+      position: relative;
+      z-index: 5;
+      padding: 2rem;
+    }
+
+    /* Output paragraph */
+    #output {
+      color: #33FF33;
+      font-size: clamp(1.4rem, 4vw, 2.4rem);
+      line-height: 1.75;
+      text-shadow:
+        0 0 5px #33FF33,
+        0 0 12px rgba(51, 255, 51, 0.35);
+    }
+
+    /* Block cursor */
+    .cursor {
+      display: inline-block;
+      width: 0.55em;
+      height: 1em;
+      background: #33FF33;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      box-shadow: 0 0 8px #33FF33;
+      animation: blink 1.1s step-end infinite;
+    }
+
+    /* ── Keyframes ── */
+
+    /* Cold-cathode CRT warming up */
+    @keyframes poweron {
+      0%   { opacity: 0; }
+      5%   { opacity: 0.9; }
+      10%  { opacity: 0; }
+      15%  { opacity: 0.75; }
+      19%  { opacity: 0; }
+      24%  { opacity: 1; }
+      28%  { opacity: 0.3; }
+      32%  { opacity: 1; }
+      38%  { opacity: 0.8; }
+      44%  { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* Phosphor afterglow: new character flares then settles */
+    @keyframes afterglow {
+      from {
+        color: #ccffcc;
+        text-shadow:
+          0 0 18px #fff,
+          0 0 36px #33FF33,
+          0 0 60px #33FF33;
+      }
+      to {
+        color: #33FF33;
+        text-shadow:
+          0 0 5px #33FF33,
+          0 0 12px rgba(51, 255, 51, 0.35);
+      }
+    }
+
+    .flash {
+      animation: afterglow 0.45s ease-out forwards;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      .crt    { animation: none; opacity: 1; }
+      .cursor { animation: none; opacity: 1; }
+      .flash  {
+        animation: none;
+        color: #33FF33;
+        text-shadow: 0 0 5px #33FF33, 0 0 12px rgba(51, 255, 51, 0.35);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="crt">
+    <main>
+      <p id="output"><span class="cursor" id="cursor"></span></p>
+    </main>
+  </div>
+  <script>
+    (function () {
+      var MESSAGE       = '¡Hola! \nSoy una aplicación desplegada con CI/CD.';
+      var output        = document.getElementById('output');
+      var cursor        = document.getElementById('cursor');
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var BOOT_DELAY    = 2200;   /* wait for poweron flicker to settle  */
+      var CHAR_DELAY    = 65;     /* ms between characters               */
+      var i             = 0;
+
+      function insertBefore(node) {
+        output.insertBefore(node, cursor);
+      }
+
+      function typeNext() {
+        if (i >= MESSAGE.length) return;
+
+        var ch = MESSAGE[i++];
+
+        if (ch === '\n') {
+          insertBefore(document.createElement('br'));
+        } else {
+          var span = document.createElement('span');
+          span.textContent = ch;
+          span.classList.add('flash');
+          span.addEventListener('animationend', function () {
+            this.classList.remove('flash');
+          }, { once: true });
+          insertBefore(span);
+        }
+
+        setTimeout(typeNext, CHAR_DELAY);
+      }
+
+      if (reducedMotion) {
+        MESSAGE.split('\n').forEach(function (line, idx) {
+          if (idx > 0) insertBefore(document.createElement('br'));
+          var span = document.createElement('span');
+          span.textContent = line;
+          insertBefore(span);
+        });
+      } else {
+        setTimeout(typeNext, BOOT_DELAY);
+      }
+    }());
+  </script>
+</body>
+</html>

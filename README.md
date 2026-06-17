@@ -49,11 +49,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open <http://localhost:5000> in your browser. You should see:
-
-```
-¡Hola! Soy una aplicación desplegada con CI/CD.
-```
+Open <http://localhost:5000> in your browser. A phosphor-green terminal page will appear with a CRT warm-up animation, then display the greeting character by character.
 
 ## Run tests
 
@@ -152,6 +148,8 @@ az ad sp create-for-rbac --name "github-actions-sp" \
 
 Copy the JSON output and save it as the `AZURE_CREDENTIALS` secret.
 
+For the full step-by-step Azure setup procedure, see [doc/azure-setup.md](doc/azure-setup.md).
+
 ### Workflow variables
 
 Non-sensitive values are defined as `env:` at the top of the workflow file:
@@ -198,6 +196,7 @@ GitHub Actions (.github/workflows/ci-cd.yml)
 | File | Purpose |
 |---|---|
 | `app.py` | Flask app — single `GET /` endpoint |
+| `templates/index.html` | Phosphor-green terminal UI served by the root route |
 | `requirements.txt` | Dependencies: `flask` and `pytest` |
 | `Dockerfile` | Image based on `python:3.11-slim` |
 | `tests/test_app.py` | Unit test for the root endpoint |

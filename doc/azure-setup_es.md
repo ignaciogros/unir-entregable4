@@ -1,17 +1,17 @@
-# Azure Setup
+# Configuración de Azure
 
-All commands use **PowerShell** and **Azure CLI**.
+Todos los comandos utilizan **PowerShell** y **Azure CLI**.
 
-## Log in and view the active subscription
+## Iniciar sesión y ver la suscripción activa
 
 ```powershell
 az login
 az account show --output table
 ```
 
-## Define variables
+## Definir variables
 
-These must match exactly the `env:` values in `.github/workflows/ci-cd.yml`.
+Deben coincidir exactamente con los valores `env:` del workflow `.github/workflows/ci-cd.yml`.
 
 ```powershell
 $RG         = "rg-entregable4-github"
@@ -24,7 +24,7 @@ Write-Host "Resource Group : $RG"
 Write-Host "ACR            : $ACR_NAME"
 ```
 
-## Create the resource group
+## Crear el grupo de recursos
 
 ```powershell
 az group create `
@@ -32,9 +32,9 @@ az group create `
   --location $LOCATION
 ```
 
-## Create Azure Container Registry (Basic SKU, admin access enabled)
+## Crear Azure Container Registry (SKU Basic, acceso admin activado)
 
-Admin access is required for ACI to authenticate with ACR when deploying.
+El acceso admin es necesario para que ACI pueda autenticarse con ACR al desplegar.
 
 ```powershell
 az acr create `
@@ -44,13 +44,13 @@ az acr create `
   --admin-enabled true
 ```
 
-## Register the Azure Container Instances provider
+## Registrar el proveedor de Azure Container Instances
 
 ```powershell
 az provider register --namespace Microsoft.ContainerInstance
 ```
 
-Wait until the following command returns `Registered`:
+Esperar hasta que el siguiente comando devuelva `Registered`:
 
 ```powershell
 az provider show `
@@ -59,7 +59,7 @@ az provider show `
   --output tsv
 ```
 
-## Create the service principal for GitHub Actions
+## Crear el service principal para GitHub Actions
 
 ```powershell
 $SUBSCRIPTION_ID = az account show --query id --output tsv
@@ -71,7 +71,7 @@ az ad sp create-for-rbac `
   --json-auth
 ```
 
-The command returns a JSON in this format:
+El comando devuelve un JSON con este formato:
 
 ```json
 {
@@ -85,19 +85,19 @@ The command returns a JSON in this format:
 }
 ```
 
-Copy the full JSON (including the `{}` braces).
+Copiar el JSON completo (incluidas las llaves `{}`).
 
-## Add the secret in GitHub
+## Añadir el secret en GitHub
 
-In the GitHub repository:
+En el repositorio de GitHub:
 
 **Settings → Secrets and variables → Actions → New repository secret**
 
-| Name | Value |
+| Nombre | Valor |
 |---|---|
-| `AZURE_CREDENTIALS` | Full JSON from the previous step |
+| `AZURE_CREDENTIALS` | JSON completo del paso anterior |
 
-## Verify the ACR
+## Verificar el ACR
 
 ```powershell
 az acr repository list `
@@ -105,7 +105,7 @@ az acr repository list `
   --output table
 ```
 
-Will be empty until the first pipeline push. After a successful workflow run:
+Estará vacío hasta el primer push del pipeline. Tras una ejecución exitosa del workflow:
 
 ```powershell
 az acr repository show-tags `
