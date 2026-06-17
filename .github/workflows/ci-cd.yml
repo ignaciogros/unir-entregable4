@@ -50,6 +50,8 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: azure/login@v2
         with:
@@ -82,3 +84,10 @@ jobs:
           echo "Getting URL..."
           FQDN=$(az container show -g "${{ env.RESOURCE_GROUP }}" -n "${{ env.ACI_NAME }}" --query ipAddress.fqdn -o tsv)
           echo "http://$FQDN:${{ env.CONTAINER_PORT }}"
+
+      - name: Update repository website URL
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          FQDN=$(az container show -g "${{ env.RESOURCE_GROUP }}" -n "${{ env.ACI_NAME }}" --query ipAddress.fqdn -o tsv)
+          gh repo edit --homepage "http://$FQDN:${{ env.CONTAINER_PORT }}"

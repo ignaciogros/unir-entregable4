@@ -97,6 +97,16 @@ En el repositorio de GitHub:
 |---|---|
 | `AZURE_CREDENTIALS` | JSON completo del paso anterior |
 
+## (Opcional) Permitir que el pipeline actualice el Website del repositorio
+
+El job `deploy` actualiza automáticamente el campo **Website** del repositorio de GitHub con la URL pública del contenedor tras cada despliegue. Para que funcione, el `GITHUB_TOKEN` necesita permiso de escritura sobre el contenido del repositorio.
+
+El workflow ya incluye `permissions: contents: write` en el job `deploy`. Solo hay que verificar que el repositorio no tenga desactivados los permisos de escritura para workflows:
+
+**Settings → Actions → General → Workflow permissions → Read and write permissions**
+
+Si está en modo solo lectura, cambiar a *Read and write permissions* y guardar.
+
 ## Verificar el ACR
 
 ```powershell
